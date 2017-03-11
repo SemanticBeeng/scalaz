@@ -1,5 +1,5 @@
-//.idea
-//.idea_modules
+.idea
+.idea_modules
 target
 project/boot
 *.swp
@@ -14,7 +14,3 @@ tags
 .classpath
 .project
 .settings
-project/.boot/*
-project/.ivy/*
-.idea/*
-
