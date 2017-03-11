@@ -16,4 +16,5 @@ tags
 .settings
 project/.boot/*
 project/.ivy/*
+.idea/*
 
