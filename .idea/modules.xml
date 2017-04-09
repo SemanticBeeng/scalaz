@@ -4,20 +4,50 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/concurrent.iml" filepath="$PROJECT_DIR$/.idea/modules/concurrent.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/concurrent-build.iml" filepath="$PROJECT_DIR$/.idea/modules/concurrent-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core.iml" filepath="$PROJECT_DIR$/.idea/modules/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core-build.iml" filepath="$PROJECT_DIR$/.idea/modules/core-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effect.iml" filepath="$PROJECT_DIR$/.idea/modules/effect.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effect-build.iml" filepath="$PROJECT_DIR$/.idea/modules/effect-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core-sources.iml" filepath="$PROJECT_DIR$/.idea/modules/core-sources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coreJS.iml" filepath="$PROJECT_DIR$/.idea/modules/coreJS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coreJS-build.iml" filepath="$PROJECT_DIR$/.idea/modules/coreJS-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coreJVM.iml" filepath="$PROJECT_DIR$/.idea/modules/coreJVM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coreJVM-build.iml" filepath="$PROJECT_DIR$/.idea/modules/coreJVM-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coreNative.iml" filepath="$PROJECT_DIR$/.idea/modules/coreNative.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coreNative-build.iml" filepath="$PROJECT_DIR$/.idea/modules/coreNative-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effect-sources.iml" filepath="$PROJECT_DIR$/.idea/modules/effect-sources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effectJS.iml" filepath="$PROJECT_DIR$/.idea/modules/effectJS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effectJS-build.iml" filepath="$PROJECT_DIR$/.idea/modules/effectJS-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effectJVM.iml" filepath="$PROJECT_DIR$/.idea/modules/effectJVM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effectJVM-build.iml" filepath="$PROJECT_DIR$/.idea/modules/effectJVM-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effectNative.iml" filepath="$PROJECT_DIR$/.idea/modules/effectNative.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effectNative-build.iml" filepath="$PROJECT_DIR$/.idea/modules/effectNative-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/example.iml" filepath="$PROJECT_DIR$/.idea/modules/example.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/example-build.iml" filepath="$PROJECT_DIR$/.idea/modules/example-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iteratee.iml" filepath="$PROJECT_DIR$/.idea/modules/iteratee.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iteratee-build.iml" filepath="$PROJECT_DIR$/.idea/modules/iteratee-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scalacheck-binding.iml" filepath="$PROJECT_DIR$/.idea/modules/scalacheck-binding.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scalacheck-binding-build.iml" filepath="$PROJECT_DIR$/.idea/modules/scalacheck-binding-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iteratee-sources.iml" filepath="$PROJECT_DIR$/.idea/modules/iteratee-sources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iterateeJS.iml" filepath="$PROJECT_DIR$/.idea/modules/iterateeJS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iterateeJS-build.iml" filepath="$PROJECT_DIR$/.idea/modules/iterateeJS-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iterateeJVM.iml" filepath="$PROJECT_DIR$/.idea/modules/iterateeJVM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iterateeJVM-build.iml" filepath="$PROJECT_DIR$/.idea/modules/iterateeJVM-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iterateeNative.iml" filepath="$PROJECT_DIR$/.idea/modules/iterateeNative.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iterateeNative-build.iml" filepath="$PROJECT_DIR$/.idea/modules/iterateeNative-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jvm_js-sources.iml" filepath="$PROJECT_DIR$/.idea/modules/jvm_js-sources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/nativeTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nativeTest-build.iml" filepath="$PROJECT_DIR$/.idea/modules/nativeTest-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rootJS.iml" filepath="$PROJECT_DIR$/.idea/modules/rootJS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rootJS-build.iml" filepath="$PROJECT_DIR$/.idea/modules/rootJS-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rootJVM.iml" filepath="$PROJECT_DIR$/.idea/modules/rootJVM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rootJVM-build.iml" filepath="$PROJECT_DIR$/.idea/modules/rootJVM-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rootNative.iml" filepath="$PROJECT_DIR$/.idea/modules/rootNative.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rootNative-build.iml" filepath="$PROJECT_DIR$/.idea/modules/rootNative-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scalacheck-binding-sources.iml" filepath="$PROJECT_DIR$/.idea/modules/scalacheck-binding-sources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scalacheckBindingJS.iml" filepath="$PROJECT_DIR$/.idea/modules/scalacheckBindingJS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scalacheckBindingJS-build.iml" filepath="$PROJECT_DIR$/.idea/modules/scalacheckBindingJS-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scalacheckBindingJVM.iml" filepath="$PROJECT_DIR$/.idea/modules/scalacheckBindingJVM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scalacheckBindingJVM-build.iml" filepath="$PROJECT_DIR$/.idea/modules/scalacheckBindingJVM-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/scalaz.iml" filepath="$PROJECT_DIR$/.idea/modules/scalaz.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/scalaz-build.iml" filepath="$PROJECT_DIR$/.idea/modules/scalaz-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tests.iml" filepath="$PROJECT_DIR$/.idea/modules/tests.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tests-build.iml" filepath="$PROJECT_DIR$/.idea/modules/tests-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tests-sources.iml" filepath="$PROJECT_DIR$/.idea/modules/tests-sources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/testsJS.iml" filepath="$PROJECT_DIR$/.idea/modules/testsJS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/testsJS-build.iml" filepath="$PROJECT_DIR$/.idea/modules/testsJS-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/testsJVM.iml" filepath="$PROJECT_DIR$/.idea/modules/testsJVM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/testsJVM-build.iml" filepath="$PROJECT_DIR$/.idea/modules/testsJVM-build.iml" />
     </modules>
   </component>
 </project>

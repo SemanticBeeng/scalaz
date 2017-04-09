@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="SBT 2" modules="scalaz,concurrent,core,effect,example,iteratee,scalacheck-binding,tests">
+    <option name="incrementalityType" value="SBT" />
+    <profile name="SBT 2" modules="scalaz,concurrent,coreJVM,effectJVM,example,iterateeJVM,rootJS,rootJVM,rootNative,scalacheckBindingJVM,testsJVM">
       <option name="postfixOps" value="true" />
       <option name="implicitConversions" value="true" />
       <option name="higherKinds" value="true" />
@@ -12,10 +13,47 @@
       <parameters>
         <parameter value="-encoding" />
         <parameter value="UTF-8" />
-        <parameter value="-Yno-generic-signatures" />
+        <parameter value="-Xfuture" />
       </parameters>
       <plugins>
-        <plugin path="$PROJECT_DIR$/project/.ivy/cache/org.spire-math/kind-projector_2.10/jars/kind-projector_2.10-0.7.1.jar" />
+        <plugin path="$PROJECT_DIR$/project/.ivy/cache/org.spire-math/kind-projector_2.12/jars/kind-projector_2.12-0.9.3.jar" />
+      </plugins>
+    </profile>
+    <profile name="SBT 3" modules="coreJS,effectJS,iterateeJS,scalacheckBindingJS,testsJS">
+      <option name="postfixOps" value="true" />
+      <option name="implicitConversions" value="true" />
+      <option name="higherKinds" value="true" />
+      <option name="existentials" value="true" />
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <parameters>
+        <parameter value="-encoding" />
+        <parameter value="UTF-8" />
+        <parameter value="-Xfuture" />
+        <parameter value="-P:scalajs:mapSourceURI:file:/development/projects/00_fp/scalaz/-&gt;https://raw.githubusercontent.com/scalaz/scalaz/2cc1c73412706e013fd3d3968cb6472dec7f5b70/" />
+      </parameters>
+      <plugins>
+        <plugin path="$PROJECT_DIR$/project/.ivy/cache/org.scala-js/scalajs-compiler_2.12.1/jars/scalajs-compiler_2.12.1-0.6.13.jar" />
+        <plugin path="$PROJECT_DIR$/project/.ivy/cache/org.spire-math/kind-projector_2.12/jars/kind-projector_2.12-0.9.3.jar" />
+      </plugins>
+    </profile>
+    <profile name="SBT 4" modules="coreNative,effectNative,iterateeNative,nativeTest">
+      <option name="postfixOps" value="true" />
+      <option name="implicitConversions" value="true" />
+      <option name="higherKinds" value="true" />
+      <option name="existentials" value="true" />
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <parameters>
+        <parameter value="-encoding" />
+        <parameter value="UTF-8" />
+        <parameter value="-Xfuture" />
+      </parameters>
+      <plugins>
+        <plugin path="$PROJECT_DIR$/project/.ivy/cache/org.scala-native/nscplugin_2.11.8/jars/nscplugin_2.11.8-0.1.0.jar" />
+        <plugin path="$PROJECT_DIR$/project/.ivy/cache/org.spire-math/kind-projector_2.11/jars/kind-projector_2.11-0.9.3.jar" />
       </plugins>
     </profile>
   </component>
