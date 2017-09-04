@@ -1,7 +1,6 @@
 import build._
 import com.typesafe.sbt.osgi.OsgiKeys
 import org.scalajs.sbtplugin.cross._
-import sbtunidoc.Plugin.UnidocKeys._
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 lazy val jsProjects = Seq[ProjectReference](
@@ -19,15 +18,25 @@ lazy val nativeProjects = Seq[ProjectReference](
 lazy val scalaz = Project(
   id = "scalaz",
   base = file("."),
-  settings = standardSettings ++ unidocSettings ++ Seq[Sett](
-    artifacts := Classpaths.artifactDefs(Seq(packageDoc in Compile)).value,
-    packagedArtifacts := Classpaths.packaged(Seq(packageDoc in Compile)).value,
+  settings = standardSettings ++ Seq[Sett](
+    description := "scalaz unidoc",
+    artifacts := Classpaths.artifactDefs(Seq(packageDoc in Compile, makePom in Compile)).value,
+    packagedArtifacts := Classpaths.packaged(Seq(packageDoc in Compile, makePom in Compile)).value,
+    pomPostProcess := { node =>
+      import scala.xml._
+      import scala.xml.transform._
+      val rule = new RewriteRule {
+        override def transform(n: Node) =
+          if (n.label == "dependencies") NodeSeq.Empty else n
+      }
+      new RuleTransformer(rule).transform(node)(0)
+    },
     unidocProjectFilter in (ScalaUnidoc, unidoc) := {
       (jsProjects ++ nativeProjects).foldLeft(inAnyProject)((acc, a) => acc -- inProjects(a))
     }
   ) ++ Defaults.packageTaskSettings(packageDoc in Compile, (unidoc in Compile).map(_.flatMap(Path.allSubpaths))),
   aggregate = jvmProjects ++ jsProjects
-)
+).enablePlugins(ScalaUnidocPlugin)
 
 lazy val rootNative = Project(
   rootNativeId,
@@ -111,9 +120,6 @@ lazy val tests = crossProject(JSPlatform, JVMPlatform).crossType(ScalazCrossType
   .dependsOn(core, effect, iteratee, scalacheckBinding)
   .jvmConfigure(_ dependsOn concurrent)
   .jsSettings(scalajsProjectSettings)
-  .jsSettings(
-    jsEnv := NodeJSEnv().value
-  )
 
 lazy val testsJVM = tests.jvm
 lazy val testsJS  = tests.js

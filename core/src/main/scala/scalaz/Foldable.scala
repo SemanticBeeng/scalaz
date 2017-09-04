@@ -109,7 +109,7 @@ trait Foldable[F[_]]  { self =>
   def foldr1Opt[A](fa: F[A])(f: A => (=> A) => A): Option[A] = foldRight(fa, None: Option[A])((a, optA) => optA map (aa => f(a)(aa)) orElse Some(a))
 
   /**Curried version of `foldLeft` */
-  final def foldl[A, B](fa: F[A], z: B)(f: B => A => B) = foldLeft(fa, z)((b, a) => f(b)(a))
+  final def foldl[A, B](fa: F[A], z: B)(f: B => A => B): B = foldLeft(fa, z)((b, a) => f(b)(a))
   def foldMapLeft1Opt[A, B](fa: F[A])(z: A => B)(f: (B, A) => B): Option[B] =
     foldLeft(fa, None: Option[B])((optB, a) =>
       optB map (f(_, a)) orElse Some(z(a)))
@@ -228,6 +228,49 @@ trait Foldable[F[_]]  { self =>
       case (Some(x @ (a, b)), aa) => val bb = f(aa); some(if (Order[B].order(b, bb) == LT) x else aa -> bb)
     } map (_._1)
 
+  /** The smallest and largest elements of `fa` or None if `fa` is empty */
+  def extrema[A: Order](fa: F[A]): Option[(A, A)] =
+    extremaBy(fa)(identity)
+
+  /** The smallest and largest values of `f(a)` for each element `a` of `fa` , or None if `fa` is empty */
+  def extremaOf[A, B: Order](fa: F[A])(f: A => B): Option[(B, B)] =
+    foldMapLeft1Opt(fa) { a =>
+      val b = f(a)
+      (b, b)
+    } {
+      case (x @ (bmin, bmax), a) =>
+        val b = f(a)
+        if (Order[B].order(b, bmin) == LT) (b, bmax)
+        else if (Order[B].order(b, bmax) == GT) (bmin, b)
+        else x
+    }
+
+  /** The elements (amin, amax) of `fa` which yield the smallest and largest values of `f(a)`, respectively, or None if `fa` is empty */
+  def extremaBy[A, B: Order](fa: F[A])(f: A => B): Option[(A, A)] =
+    foldMapLeft1Opt(fa) { a =>
+        val b = f(a)
+        (a, a, b, b)
+    } {
+      case (x @ ((amin, amax, bmin, bmax)), a) =>
+        val b = f(a)
+        val greaterThanOrEq = Order[B].greaterThanOrEqual(b, bmax)
+        if(Order[B].lessThanOrEqual(b, bmin)) {
+          if(greaterThanOrEq) {
+            (a, a, b, b)
+          } else {
+            (a, amax, b, bmax)
+          }
+        } else {
+          if(greaterThanOrEq) {
+            (amin, a, bmin, b)
+          } else {
+            x
+          }
+        }
+    } map {
+      case (amin, amax, _, _) => (amin, amax)
+    }
+
   def sumr[A](fa: F[A])(implicit A: Monoid[A]): A =
     foldRight(fa, A.zero)(A.append)
 
@@ -324,6 +367,9 @@ trait Foldable[F[_]]  { self =>
           a :: seen
         else seen
     }.reverse
+
+  def distinctBy[A, B: Equal](fa: F[A])(f: A => B): IList[A] =
+    distinctE(fa)(Equal.equalBy(f))
 
   def collapse[X[_], A](x: F[A])(implicit A: ApplicativePlus[X]): X[A] =
     foldRight(x, A.empty[A])((a, b) => A.plus(A.point(a), b))

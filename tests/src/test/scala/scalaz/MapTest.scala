@@ -971,6 +971,7 @@ object MapTest extends SpecLite {
 
   checkAll(order.laws[Int ==>> Int])
   checkAll(monoid.laws[Int ==>> Int])
+  checkAll(semilattice.laws[Int ==>> ISet[Int]])
 
   {
     implicit def equMapConj[A: Equal, B: Equal]: Equal[(A ==>> B) @@ Tags.Conjunction] =
@@ -1013,8 +1014,12 @@ object MapTest extends SpecLite {
   object instances {
     def bind[A: Order] = Bind[A ==>> ?]
     def traverse[A] = Traverse[A ==>> ?]
+    def band[A: Order, B: Band] = Band[A ==>> B]
+    def semiLattice[A: Order, B: SemiLattice] = SemiLattice[A ==>> B]
+    def monoid[A: Order, B: Semigroup] = Monoid[A ==>> B]
 
     // checking absence of ambiguity
     def functor[A: Order] = Functor[A ==>> ?]
+    def semigroup[A: Order, B: SemiLattice] = Semigroup[A ==>> B]
   }
 }
