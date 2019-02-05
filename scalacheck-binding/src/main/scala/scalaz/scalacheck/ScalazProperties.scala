@@ -5,6 +5,8 @@ import org.scalacheck._
 import Prop.forAll
 import Scalaz._
 
+import scala.language.higherKinds
+
 /**
  * Scalacheck properties that should hold for instances of type classes defined in Scalaz Core.
  */
@@ -88,11 +90,21 @@ object ScalazProperties {
   }
 
   object semigroup {
+    import ScalazArbitrary.Arbitrary_Maybe
+
     def associative[A](implicit A: Semigroup[A], eqa: Equal[A], arb: Arbitrary[A]): Prop = forAll(A.semigroupLaw.associative _)
+
+    def unfoldlSumOptConsistency[A, S](implicit A: Semigroup[A], eqa: Equal[A], aa: Arbitrary[A], as: Arbitrary[S], cs: Cogen[S]): Prop =
+      forAll(A.semigroupLaw.unfoldlSumOptConsistency[S] _)
+
+    def unfoldrSumOptConsistency[A, S](implicit A: Semigroup[A], eqa: Equal[A], aa: Arbitrary[A], as: Arbitrary[S], cs: Cogen[S]): Prop =
+      forAll(A.semigroupLaw.unfoldrSumOptConsistency[S] _)
 
     def laws[A](implicit A: Semigroup[A], eqa: Equal[A], arb: Arbitrary[A]): Properties =
       newProperties("semigroup") { p =>
         p.property("associative") = associative[A]
+        p.property("unfoldlSumOpt consistency") = unfoldlSumOptConsistency[A, Int]
+        p.property("unfoldrSumOpt consistency") = unfoldrSumOptConsistency[A, Int]
       }
   }
 
@@ -128,6 +140,30 @@ object ScalazProperties {
         p.include(band.laws[A])
         p.property("commutative") = commutative[A]
     }
+  }
+
+  object reducer {
+    import ScalazArbitrary.Arbitrary_Maybe
+
+    def consCorrectness[C, M](implicit R: Reducer[C, M], ac: Arbitrary[C], am: Arbitrary[M], eqm: Equal[M]): Prop =
+      forAll(R.reducerLaw.consCorrectness _)
+
+    def snocCorrectness[C, M](implicit R: Reducer[C, M], ac: Arbitrary[C], am: Arbitrary[M], eqm: Equal[M]): Prop =
+      forAll(R.reducerLaw.snocCorrectness _)
+
+    def unfoldlOptConsistency[C, M, S](implicit R: Reducer[C, M], ac: Arbitrary[C], as: Arbitrary[S], cs: Cogen[S], eqm: Equal[M]): Prop =
+      forAll(R.reducerLaw.unfoldlOptConsistency[S] _)
+
+    def unfoldrOptConsistency[C, M, S](implicit R: Reducer[C, M], ac: Arbitrary[C], as: Arbitrary[S], cs: Cogen[S], eqm: Equal[M]): Prop =
+      forAll(R.reducerLaw.unfoldrOptConsistency[S] _)
+
+    def laws[C: Arbitrary, M: Arbitrary: Equal](implicit R: Reducer[C, M]): Properties =
+      newProperties("reducer") { p =>
+        p.property("cons correctness") = consCorrectness[C, M]
+        p.property("snoc correctness") = snocCorrectness[C, M]
+        p.property("unfoldlOpt consistency") = unfoldlOptConsistency[C, M, Int]
+        p.property("unfoldrOpt consistency") = unfoldrOptConsistency[C, M, Int]
+      }
   }
 
   object invariantFunctor {
@@ -177,6 +213,51 @@ object ScalazProperties {
       }
   }
 
+  object strong {
+    def firstIsSwappedSecond[M[_,_], A, B, C](implicit M: Strong[M], mba: Arbitrary[M[A, B]], eq: Equal[M[(A,C),(B,C)]]): Prop =
+      forAll(M.strongLaw.firstIsSwappedSecond[A, B, C] _)
+
+    def secondIsSwappedFirst[M[_,_], A, B, C](implicit M: Strong[M], mba: Arbitrary[M[A, B]], eq: Equal[M[(C,A),(C,B)]]): Prop =
+      forAll(M.strongLaw.secondIsSwappedFirst[A, B, C] _)
+
+    def mapfstEqualsFirstAndThenMapsnd[M[_,_], A, B, C](implicit M: Strong[M], mba: Arbitrary[M[A, B]], eq: Equal[M[(A,C),B]]): Prop =
+      forAll(M.strongLaw.mapfstEqualsFirstAndThenMapsnd[A, B, C] _)
+
+    def mapfstEqualsSecondAndThenMapsnd[M[_,_], A, B, C](implicit M: Strong[M], mba: Arbitrary[M[A, B]], eq: Equal[M[(C,A),B]]): Prop =
+      forAll(M.strongLaw.mapfstEqualsSecondAndThenMapsnd[A, B, C] _)
+
+    def dinaturalityFirst[M[_,_], A, B, C, D](implicit M: Strong[M], mba: Arbitrary[M[A, B]], cd: Arbitrary[C => D], eq: Equal[M[(A,C),(B,D)]]): Prop =
+      forAll(M.strongLaw.dinaturalityFirst[A, B, C, D] _)
+
+    def dinaturalitySecond[M[_,_], A, B, C, D](implicit M: Strong[M], mba: Arbitrary[M[A, B]], cd: Arbitrary[C => D], eq: Equal[M[(C,A), (D,B)]]): Prop =
+      forAll(M.strongLaw.dinaturalitySecond[A, B, C, D] _)
+
+    def firstFirstIsDimap[M[_,_], A, B, C, D](implicit M: Strong[M], mba: Arbitrary[M[A, B]], eq: Equal[M[((A,C),D),((B,C),D)]]): Prop =
+      forAll(M.strongLaw.firstFirstIsDimap[A, B, C, D] _)
+
+    def secondSecondIsDimap[M[_,_], A, B, C, D](implicit M: Strong[M], mba: Arbitrary[M[A, B]], eq: Equal[M[(D,(C,A)),(D,(C,B))]]): Prop =
+      forAll(M.strongLaw.secondSecondIsDimap[A, B, C, D] _)
+
+    def laws[M[_,_]](implicit
+         F: Strong[M],
+         af: Arbitrary[M[Int, Int]],
+         eq0: Equal[M[Int,Int]],
+         eq1: Equal[M[(Int,Int), (Int,Int)]],
+         eq2: Equal[M[(Int,Int), Int]],
+         eq3: Equal[M[((Int,Int),Int),((Int,Int),Int)]],
+         eq4: Equal[M[(Int,(Int,Int)),(Int,(Int,Int))]]): Properties =
+      newProperties("strong") { p =>
+        p.include(ScalazProperties.profunctor.laws[M])
+        p.property("firstIsSwappedSecond") = firstIsSwappedSecond[M, Int, Int, Int]
+        p.property("secondIsSwappedFirst") = secondIsSwappedFirst[M, Int, Int, Int]
+        p.property("mapfstEqualsFirstAndThenMapsnd") = mapfstEqualsFirstAndThenMapsnd[M, Int, Int, Int]
+        p.property("dinaturalityFirst") = dinaturalityFirst[M, Int, Int, Int, Int]
+        p.property("dinaturalitySecond") = dinaturalitySecond[M, Int, Int, Int, Int]
+        p.property("firstFirstIsDimap") = firstFirstIsDimap[M, Int, Int, Int, Int]
+        p.property("secondSecondIsDimap") = secondSecondIsDimap[M, Int, Int, Int, Int]
+      }
+  }
+
   object align {
     def collapse[F[_], A](implicit F: Align[F], E: Equal[F[A \&/ A]], A: Arbitrary[F[A]]): Prop =
       forAll(F.alignLaw.collapse[A] _)
@@ -195,7 +276,10 @@ object ScalazProperties {
     def laws[F[_]](implicit F: Apply[F], af: Arbitrary[F[Int]],
                    aff: Arbitrary[F[Int => Int]], e: Equal[F[Int]]): Properties =
       newProperties("apply") { p =>
+        implicit val r: Reducer[F[Int], F[Int]] = F.liftReducer(Reducer.identityReducer[Int])
+
         p.include(functor.laws[F])
+        p.include(reducer.laws[F[Int], F[Int]])
         p.property("composition") = self.composition[F, Int, Int, Int]
       }
   }
@@ -221,6 +305,25 @@ object ScalazProperties {
         p.property("homomorphism") = applicative.homomorphism[F, Int, Int]
         p.property("interchange") = applicative.interchange[F, Int, Int]
         p.property("map consistent with ap") = applicative.mapApConsistency[F, Int, Int]
+      }
+  }
+
+  object applicativeError{
+    def raisedErrorsHandled[F[_], E, A](implicit A: ApplicativeError[F, E], eq: Equal[F[A]], ae: Arbitrary[E], afea: Arbitrary[E => F[A]]): Prop =
+      forAll(A.applicativeErrorLaws.raisedErrorsHandled[A] _)
+
+    def laws[F[_], E](implicit A: ApplicativeError[F, E], am: Arbitrary[F[Int]], afap: Arbitrary[F[Int => Int]], aeq: Equal[F[Int]], ae: Arbitrary[E], afea: Arbitrary[E => F[Int]]): Properties =
+      newProperties("applicative error"){ p =>
+        p.include(applicative.laws[F])
+        p.property("raisedErrorsHandled") = raisedErrorsHandled[F, E, Int]
+      }
+  }
+
+  object alt {
+    def laws[F[_]](implicit F: Applicative[F], af: Arbitrary[F[Int]],
+                   aff: Arbitrary[F[Int => Int]], e: Equal[F[Int]]): Properties =
+      newProperties("alt") { p =>
+        p.include(applicative.laws[F])
       }
   }
 
@@ -442,7 +545,7 @@ object ScalazProperties {
     def rightFMConsistent[F[_], A](implicit F: Foldable[F], afa: Arbitrary[F[A]], ea: Equal[A]): Prop =
       forAll(F.foldableLaw.rightFMConsistent[A] _)
 
-    def laws[F[_]](implicit fa: Arbitrary[F[Int]], F: Foldable[F], EA: Equal[Int]): Properties =
+    def laws[F[_]](implicit fa: Arbitrary[F[Int]], F: Foldable[F]): Properties =
       newProperties("foldable") { p =>
         p.property("consistent left fold") = leftFMConsistent[F, Int]
         p.property("consistent right fold") = rightFMConsistent[F, Int]
@@ -450,8 +553,6 @@ object ScalazProperties {
   }
 
   object foldable1 {
-    type Pair[A] = (A, A)
-
     def leftFM1Consistent[F[_], A](implicit F: Foldable1[F], fa: Arbitrary[F[A]], ea: Equal[A]): Prop =
       forAll(F.foldable1Law.leftFM1Consistent[A] _)
 
@@ -459,7 +560,7 @@ object ScalazProperties {
       forAll(F.foldable1Law.rightFM1Consistent[A] _)
 
     def laws[F[_]](implicit fa: Arbitrary[F[Int]],
-                   F: Foldable1[F], EA: Equal[Int]): Properties =
+                   F: Foldable1[F]): Properties =
       newProperties("foldable1") { p =>
         p.include(foldable.laws[F])
         p.property("consistent left fold1") = leftFM1Consistent[F, Int]
@@ -555,6 +656,17 @@ object ScalazProperties {
       }
   }
 
+  object decidable {
+    def laws[F[_]](implicit
+                     F: Decidable[F],
+                     af: Arbitrary[F[Int]],
+                     axy: Arbitrary[Int => Int],
+                     ef: Equal[F[Int]]): Properties =
+      newProperties("decidable") { p =>
+        p.include(divisible.laws[F])
+      }
+  }
+
   object compose {
     def associative[=>:[_, _], A, B, C, D](implicit ab: Arbitrary[A =>: B], bc: Arbitrary[B =>: C],
                                            cd: Arbitrary[C =>: D], C: Compose[=>:], E: Equal[A =>: D]): Prop =
@@ -622,8 +734,6 @@ object ScalazProperties {
   }
 
   object monadError {
-    def raisedErrorsHandled[F[_], E, A](implicit me: MonadError[F, E], eq: Equal[F[A]], ae: Arbitrary[E], afea: Arbitrary[E => F[A]]): Prop =
-      forAll(me.monadErrorLaw.raisedErrorsHandled[A] _)
     def errorsRaised[F[_], E, A](implicit me: MonadError[F, E], eq: Equal[F[A]], ae: Arbitrary[E], aa: Arbitrary[A]): Prop =
       forAll(me.monadErrorLaw.errorsRaised[A] _)
     def errorsStopComputation[F[_], E, A](implicit me: MonadError[F, E], eq: Equal[F[A]], ae: Arbitrary[E], aa: Arbitrary[A]): Prop =
@@ -632,7 +742,7 @@ object ScalazProperties {
     def laws[F[_], E](implicit me: MonadError[F, E], am: Arbitrary[F[Int]], afap: Arbitrary[F[Int => Int]], aeq: Equal[F[Int]], ae: Arbitrary[E], afea: Arbitrary[E => F[Int]]): Properties =
       newProperties("monad error"){ p =>
         p.include(monad.laws[F])
-        p.property("raisedErrorsHandled") = raisedErrorsHandled[F, E, Int]
+        p.include(applicativeError.laws[F, E])
         p.property("errorsRaised") = errorsRaised[F, E, Int]
         p.property("errorsStopComputation") = errorsStopComputation[F, E, Int]
       }
